@@ -1,0 +1,42 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="test.aspx.vb" Inherits="test" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <style>
+        .barcode {
+            
+            font-family:"IDAutomationSC39S Demo";
+        }
+        .barcodetext {
+            font-family:"Calibri";
+            text-align:"center";
+            
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:Label ID="Label1" runat="server" cssClass="barcode" Text="*183001*"></asp:Label><br />
+        <asp:Label ID="Label2" runat="server" cssClass="barcodetext" Text="183001"></asp:Label>
+
+        <asp:Button ID="btnPrintBC" runat="server" Text="Print Barcode" />
+
+        <br />
+        <br />
+
+     <asp:Chart ID="Chart1" runat="server" DataSourceID="sdsWIP">
+            <Series>
+                <asp:Series Name="Series1" ChartType="Pie"></asp:Series>
+            </Series>
+            <ChartAreas>
+                <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
+            </ChartAreas>
+        </asp:Chart>
+        <asp:SqlDataSource ID="sdsWIP" runat="server" SelectCommand="SELECT BML_POPREPORTING.ItemNo, BML_POPREPORTING_GREENLIGHTS.RailsInstalledStatus FROM BML_POPREPORTING LEFT JOIN BML_POPREPORTING_GREENLIGHTS ON BML_POPREPORTING.ProdNo = BML_POPREPORTING_GREENLIGHTS.ProdNo WHERE (BML_POPREPORTING_GREENLIGHTS.CompleteStatus < 2) AND (BML_POPREPORTING_GREENLIGHTS.RailsInstalledStatus = 2) AND (BML_POPREPORTING_GREENLIGHTS.ShrinkwrapStatus &lt; 2) AND (BML_POPREPORTING_GREENLIGHTS.BUILDLOC = 'S')"></asp:SqlDataSource></div>
+    </form>
+</body>
+</html>

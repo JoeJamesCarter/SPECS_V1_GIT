@@ -1,0 +1,148 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AddProductIdea.aspx.vb" Inherits="PDI_AddProductIdea" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Add A New Product Idea</title>
+    <link href="../StyleSheet.css" rel="stylesheet" />
+      <script>
+          window.onunload = function () {
+              window.opener.document.getElementById('btnRefresh').click();
+
+          }
+
+     </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div class="newStyle1">
+        <asp:Label ID="Label1" runat="server" Text="Add A New Product Development Idea" CssClass="newStyle7"></asp:Label>
+        <asp:DetailsView ID="dvProject" runat="server" AutoGenerateRows="False" DataKeyNames="ModelYear,AutoID" DataSourceID="sdsProjects" DefaultMode="Insert" CssClass="newStyle1" Width="850px" BackColor="White" BorderColor="#999999" BorderStyle="Solid" BorderWidth="1px" CellPadding="3" ForeColor="Black" GridLines="Vertical">
+            <AlternatingRowStyle BackColor="#CCCCCC" />
+            <EditRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+            <Fields>
+                <asp:BoundField DataField="ModelYear" HeaderText="Model Year (2 digits)" ReadOnly="True" SortExpression="ModelYear" />                
+                <asp:BoundField DataField="RequestedBy" HeaderText="Requested By" SortExpression="RequestedBy" />
+                <asp:BoundField DataField="RequestedDate" HeaderText="Requested Date" SortExpression="RequestedDate" />
+                 <asp:TemplateField HeaderText="Approval Status">
+                        <ItemTemplate>
+                            <asp:DropDownList ID="ddlApprovalStatus" runat="server" DataSourceID="sdsApprovalStatuses" DataTextField="ApprovalStatusDesc" DataValueField="AutoID" SelectedValue='<%# Eval("ApprovalStatus") %>' CssClass="newStyle1" Enabled="True" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                             <asp:SqlDataSource ID="sdsApprovalStatuses" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" SelectCommand="SELECT * FROM [ProductDesignIdeas_ApprovalStatuses] ORDER BY [ApprovalStatusDesc]"></asp:SqlDataSource>
+                            </ItemTemplate>
+                     </asp:TemplateField>              
+                
+                <asp:BoundField DataField="Category" HeaderText="Category" SortExpression="Category" />
+                <asp:BoundField DataField="Series" HeaderText="Series" SortExpression="Series" />
+                <asp:TemplateField HeaderText="Initial Description">
+                        <Itemtemplate>
+                            <asp:TextBox ID="tbInitialDescription" runat="server" Text='<%#Eval("InitialDescription")%>' TextMode="MultiLine" Width="400" Height="100"></asp:TextBox>
+                        </Itemtemplate>
+                    </asp:TemplateField>
+                     <asp:TemplateField HeaderText="More Detailed Description">
+                        <Itemtemplate>
+                            <asp:TextBox ID="tbNarrowedDescription" runat="server" Text='<%#Eval("NarrowedDescription")%>' TextMode="MultiLine" Width="400" Height="100" ></asp:TextBox>
+                        </Itemtemplate>
+                    </asp:TemplateField>                               
+                    <asp:TemplateField HeaderText="Strategic Priorty">
+                        <ItemTemplate>
+                             <asp:DropDownList ID="ddlStrategicPriority" runat="server" SelectedValue='<%# Eval("StrategicPriority")%>'>
+                                <asp:ListItem></asp:ListItem>
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                            </asp:DropDownList>                      
+                        </ItemTemplate>                       
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Sales Priorty">
+                        <ItemTemplate>
+                                 <asp:DropDownList ID="ddlSalesPriority" runat="server" SelectedValue='<%# Eval("SalesPriority")%>'>
+                                <asp:ListItem></asp:ListItem>
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                            </asp:DropDownList>                            
+                        </ItemTemplate>                       
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Engineering Active?">
+                        <ItemTemplate>                            
+                              <asp:DropDownList ID="ddlEngActive" runat="server" >
+                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="1">Yes</asp:ListItem>
+                            </asp:DropDownList>                  
+                        </ItemTemplate>                       
+                    </asp:TemplateField>
+                <asp:BoundField DataField="ProjectLead" HeaderText="Project Lead" SortExpression="ProjectLead" />
+                <asp:BoundField DataField="TargetDate" HeaderText="Target Date" SortExpression="TargetDate" />
+                  <asp:TemplateField HeaderText="Project Status">
+                        <ItemTemplate>
+                            <asp:DropDownList ID="ddlProjectStatus" runat="server" Enabled="True" SelectedValue='<%# Eval("ProjectStatus") %>'>
+                                <asp:ListItem></asp:ListItem>
+                                <asp:ListItem Value="0">NOT STARTED</asp:ListItem>
+                                <asp:ListItem Value="1">IN PROGRESS</asp:ListItem>
+                                <asp:ListItem Value="2">DONE</asp:ListItem>
+                            </asp:DropDownList>
+                        </ItemTemplate>
+                    </asp:TemplateField>               
+                <asp:CommandField ShowInsertButton="True" />
+            </Fields>
+            <FooterStyle BackColor="#CCCCCC" />
+            <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+        </asp:DetailsView>
+        <asp:SqlDataSource ID="sdsProjects" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" DeleteCommand="DELETE FROM [ProductDesignIdeas] WHERE [ModelYear] = @ModelYear AND [AutoID] = @AutoID" InsertCommand="INSERT INTO [ProductDesignIdeas] ([ModelYear], [RequestedBy], [RequestedDate], [ApprovalStatus], [Category], [Series], [InitialDescription], [NarrowedDescription], [StrategicPriority], [SalesPriority], [EngActiveFlag], [ProjectLead], [TargetDate], [ProjectStatus]) VALUES (@ModelYear, @RequestedBy, @RequestedDate, @ApprovalStatus, @Category, @Series, @InitialDescription, @NarrowedDescription, @StrategicPriority, @SalesPriority, @EngActiveFlag, @ProjectLead, @TargetDate, @ProjectStatus)" SelectCommand="SELECT * FROM [ProductDesignIdeas]" UpdateCommand="UPDATE [ProductDesignIdeas] SET [RequestedBy] = @RequestedBy, [RequestedDate] = @RequestedDate, [ApprovalStatus] = @ApprovalStatus, [Category] = @Category, [Series] = @Series, [InitialDescription] = @InitialDescription, [NarrowedDescription] = @NarrowedDescription, [StrategicPriority] = @StrategicPriority, [SalesPriority] = @SalesPriority, [EngActiveFlag] = @EngActiveFlag, [ProjectLead] = @ProjectLead, [TargetDate] = @TargetDate, [ProjectStatus] = @ProjectStatus, [Notes] = @Notes, [ApprovalStatusDate] = @ApprovalStatusDate, [ProjectStatusDate] = @ProjectStatusDate, [StrategicPriorityDate] = @StrategicPriorityDate, [SalesPriorityDate] = @SalesPriorityDate, [EngActiveFlagDate] = @EngActiveFlagDate WHERE [ModelYear] = @ModelYear AND [AutoID] = @AutoID">
+            <DeleteParameters>
+                <asp:Parameter Name="ModelYear" Type="Int32" />
+                <asp:Parameter Name="AutoID" Type="Int32" />
+            </DeleteParameters>
+            <InsertParameters>
+                <asp:Parameter Name="ModelYear" Type="Int32" />
+                <asp:Parameter Name="AutoID" Type="Int32" />
+                <asp:Parameter Name="RequestedBy" Type="String" />
+                <asp:Parameter Name="RequestedDate" Type="DateTime" />
+                <asp:Parameter Name="ApprovalStatus" Type="Int32" />
+                <asp:Parameter Name="Category" Type="String" />
+                <asp:Parameter Name="Series" Type="String" />
+                <asp:Parameter Name="InitialDescription" Type="String" />
+                <asp:Parameter Name="NarrowedDescription" Type="String" />
+                <asp:Parameter Name="StrategicPriority" Type="Int32" />
+                <asp:Parameter Name="SalesPriority" Type="Int32" />
+                <asp:Parameter Name="EngActiveFlag" Type="Int32" />
+                <asp:Parameter Name="ProjectLead" Type="String" />
+                <asp:Parameter DbType="Date" Name="TargetDate" />
+                <asp:Parameter Name="ProjectStatus" Type="Int32" />               
+            </InsertParameters>
+            <UpdateParameters>
+                <asp:Parameter Name="RequestedBy" Type="String" />
+                <asp:Parameter Name="RequestedDate" Type="DateTime" />
+                <asp:Parameter Name="ApprovalStatus" Type="Int32" />
+                <asp:Parameter Name="Category" Type="String" />
+                <asp:Parameter Name="Series" Type="String" />
+                <asp:Parameter Name="InitialDescription" Type="String" />
+                <asp:Parameter Name="NarrowedDescription" Type="String" />
+                <asp:Parameter Name="StrategicPriority" Type="Int32" />
+                <asp:Parameter Name="SalesPriority" Type="Int32" />
+                <asp:Parameter Name="EngActiveFlag" Type="Int32" />
+                <asp:Parameter Name="ProjectLead" Type="String" />
+                <asp:Parameter DbType="Date" Name="TargetDate" />
+                <asp:Parameter Name="ProjectStatus" Type="Int32" />
+                <asp:Parameter Name="Notes" Type="String" />
+                <asp:Parameter Name="ApprovalStatusDate" Type="DateTime" />
+                <asp:Parameter Name="ProjectStatusDate" Type="DateTime" />
+                <asp:Parameter Name="StrategicPriorityDate" Type="DateTime" />
+                <asp:Parameter Name="SalesPriorityDate" Type="DateTime" />
+                <asp:Parameter Name="EngActiveFlagDate" Type="DateTime" />
+                <asp:Parameter Name="ModelYear" Type="Int32" />
+                <asp:Parameter Name="AutoID" Type="Int32" />
+            </UpdateParameters>
+        </asp:SqlDataSource>
+    </div>
+    </form>
+</body>
+</html>

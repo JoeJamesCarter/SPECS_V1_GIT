@@ -1,0 +1,26 @@
+﻿
+Imports System.Drawing.Printing
+Imports System.Drawing
+Imports RestSharp
+
+Partial Class test
+    Inherits System.Web.UI.Page
+
+
+    Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+    End Sub
+
+    Private Sub PostToTeams(Prod As String)
+        Dim client = New RestClient("https://polarisind.webhook.office.com/webhookb2/e5e5140a-9a66-43a4-bc6c-c51085219ee4@85f78c4c-ad11-4735-9624-0b2c11611dff/IncomingWebhook/c102796df79c446a88a575ed37dce651/e21f1092-8010-45f9-b419-50aa3efc4b1f")
+        client.Timeout = -1
+        Dim request = New RestRequest(Method.POST)
+        request.AddHeader("Content-Type", "application/json")
+        request.AddParameter("application/json", "{" & vbCrLf & "    ""@context"": ""https://schema.org/extensions""," & vbCrLf & "    ""@type"": ""MessageCard""," & vbCrLf & "    ""themeColor"": ""0072C6""," & vbCrLf & "    ""title"": ""Prod #: " & Prod & "    Model: 23QCL""," & vbCrLf & "    ""text"": ""Prod #: 123456 Has Just Completed Through Floors.""" & vbCrLf & "    " & vbCrLf & "}", ParameterType.RequestBody)
+        Dim response As IRestResponse = client.Execute(request)
+        Console.WriteLine(response.Content)
+    End Sub
+
+
+
+End Class

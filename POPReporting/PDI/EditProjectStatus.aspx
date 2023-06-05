@@ -1,0 +1,279 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="EditProjectStatus.aspx.vb" Inherits="PDI_EditProjectStatus" Debug="true" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Edit Project Status</title>
+    <link href="../StyleSheet.css" rel="stylesheet" />
+    <script>
+        window.onunload = function () {
+            window.opener.document.getElementById('btnRefresh').click();
+
+        }
+
+    </script>
+    <style>
+        #left {
+            width: 1000px;
+            float: left;
+        }
+
+        #right {
+            float: left;
+        }
+        #attachments {
+            max-width:300px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div id="left">
+            <asp:Label ID="lblProjectID" runat="server" CssClass="newStyle6" Text="Project ID:  "></asp:Label>
+            <asp:Label ID="lblModelYear" runat="server" CssClass="newStyle6"></asp:Label>
+            &nbsp;-
+        <asp:Label ID="lblItemID" runat="server" CssClass="newStyle6"></asp:Label>
+            <br />
+            <br />
+            <asp:DetailsView ID="dvProject" runat="server" AutoGenerateRows="False" DataKeyNames="ModelYear,AutoID" DataSourceID="sdsProjects" CssClass="newStyle1" Width="850px" BackColor="White" BorderColor="#999999" BorderStyle="Solid" BorderWidth="1px" CellPadding="3" ForeColor="Black" GridLines="Vertical">
+                <AlternatingRowStyle BackColor="#CCCCCC" />
+                <EditRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                <Fields>
+                    <asp:BoundField DataField="ModelYear" HeaderText="Model Year" ReadOnly="True" SortExpression="ModelYear" />
+                    <asp:BoundField DataField="AutoID" HeaderText="Request ID" ReadOnly="True" SortExpression="AutoID" />
+                    <asp:BoundField DataField="RequestedBy" HeaderText="Requested By" SortExpression="RequestedBy" />
+                    <asp:BoundField DataField="RequestedDate" HeaderText="Requested Date" ReadOnly="True" SortExpression="RequestedDate" />
+                    <asp:TemplateField HeaderText="Approval Status">
+                        <ItemTemplate>
+                            <asp:DropDownList ID="ddlApprovalStatus" runat="server" DataSourceID="sdsApprovalStatuses" DataTextField="ApprovalStatusDesc" DataValueField="AutoID" SelectedValue='<%# Eval("ApprovalStatus") %>' CssClass="newStyle1" Enabled="False"></asp:DropDownList>
+                            <asp:SqlDataSource ID="sdsApprovalStatuses" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" SelectCommand="SELECT * FROM [ProductDesignIdeas_ApprovalStatuses] ORDER BY [ApprovalStatusDesc]"></asp:SqlDataSource>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlApprovalStatus" runat="server" DataSourceID="sdsApprovalStatuses" DataTextField="ApprovalStatusDesc" DataValueField="AutoID" SelectedValue='<%# Eval("ApprovalStatus") %>' CssClass="newStyle1"></asp:DropDownList>
+                            <asp:SqlDataSource ID="sdsApprovalStatuses" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" SelectCommand="SELECT * FROM [ProductDesignIdeas_ApprovalStatuses] ORDER BY [ApprovalStatusDesc]"></asp:SqlDataSource>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Category">
+                        <ItemTemplate>
+                            <asp:Label ID="lblCategory" runat="server" Text='<%#Eval("Category")%>'></asp:Label>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlCategories" runat="server" DataSourceID="sdsCategories" DataTextField="Category" DataValueField="Category" SelectedValue='<%# Eval("Category")%>' CssClass="newStyle1"></asp:DropDownList>
+                            <asp:SqlDataSource ID="sdsCategories" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" SelectCommand="SELECT Distinct Category FROM [ProductDesignIdeas] ORDER BY Category"></asp:SqlDataSource>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:BoundField DataField="Series" HeaderText="Series" SortExpression="Series" />
+                    <asp:TemplateField HeaderText="Initial Description">
+                        <ItemTemplate>
+                            <asp:TextBox ID="tbInitialDescription" runat="server" Text='<%#Eval("InitialDescription")%>' TextMode="MultiLine" Width="400" Height="100" Enabled="False"></asp:TextBox>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="More Detailed Description">
+                        <ItemTemplate>
+                            <asp:TextBox ID="tbNarrowedDescription" runat="server" Text='<%#Eval("NarrowedDescription")%>' TextMode="MultiLine" Width="400" Height="100" Enabled="False"></asp:TextBox>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Strategic Priorty">
+                        <ItemTemplate>
+                            <asp:Label ID="lblStrategicPriority" runat="server" Text='<%#Eval("StrategicPriority")%>'></asp:Label>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlStrategicPriority" runat="server" SelectedValue='<%# Eval("StrategicPriority")%>'>
+                                <asp:ListItem></asp:ListItem>
+                                <asp:ListItem>0</asp:ListItem>
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Sales Priorty">
+                        <ItemTemplate>
+                            <asp:Label ID="lblSalesPriority" runat="server" Text='<%#Eval("SalesPriority")%>'></asp:Label>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlSalesPriority" runat="server" SelectedValue='<%# Eval("SalesPriority")%>'>
+                                <asp:ListItem></asp:ListItem>
+                                <asp:ListItem>0</asp:ListItem>
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>3</asp:ListItem>
+                                <asp:ListItem>4</asp:ListItem>
+                                <asp:ListItem>5</asp:ListItem>
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Engineering Active?">
+                        <ItemTemplate>
+                            <asp:Label ID="lblEngActive" runat="server" Text='<%# IIf(Eval("EngActiveFlag") = "1", "YES", "NO")%>'></asp:Label>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlEngActive" runat="server" SelectedValue='<%#Eval("EngActiveFlag")%>'>
+                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="1">Yes</asp:ListItem>
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:BoundField DataField="TargetDate" HeaderText="Target Date" SortExpression="TargetDate" />
+                    <asp:BoundField DataField="ProjectLead" HeaderText="Project Lead" SortExpression="ProjectLead" />
+                    <asp:TemplateField HeaderText="Project Status">
+                        <ItemTemplate>
+                            <asp:DropDownList ID="ddlProjectStatus" runat="server" Enabled="True" SelectedValue='<%# Eval("ProjectStatus") %>'>
+                                <asp:ListItem Value="0">NOT STARTED</asp:ListItem>
+                                <asp:ListItem Value="1">IN PROGRESS</asp:ListItem>
+                                <asp:ListItem Value="2">DONE</asp:ListItem>
+                            </asp:DropDownList>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:CommandField ShowEditButton="True" />
+                </Fields>
+                <FooterStyle BackColor="#CCCCCC" />
+                <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+            </asp:DetailsView>
+            <asp:SqlDataSource ID="sdsProjects" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" DeleteCommand="DELETE FROM [ProductDesignIdeas] WHERE [ModelYear] = @ModelYear AND [AutoID] = @AutoID" InsertCommand="INSERT INTO [ProductDesignIdeas] ([ModelYear], [AutoID], [RequestedBy], [RequestedDate], [ApprovalStatus], [Category], [Series], [InitialDescription], [NarrowedDescription], [StrategicPriority], [SalesPriority], [EngActiveFlag], [ProjectLead], [TargetDate], [ProjectStatus], [Notes]) VALUES (@ModelYear, @AutoID, @RequestedBy, @RequestedDate, @ApprovalStatus, @Category, @Series, @InitialDescription, @NarrowedDescription, @StrategicPriority, @SalesPriority, @EngActiveFlag, @ProjectLead, @TargetDate, @ProjectStatus, @Notes)" SelectCommand="SELECT * FROM [ProductDesignIdeas] WHERE (([AutoID] = @AutoID) AND ([ModelYear] = @ModelYear))" UpdateCommand="UPDATE [ProductDesignIdeas] SET [RequestedBy] = @RequestedBy, [ApprovalStatus] = @ApprovalStatus, [Category] = @Category, [Series] = @Series, [InitialDescription] = @InitialDescription, [NarrowedDescription] = @NarrowedDescription, [StrategicPriority] = @StrategicPriority, [SalesPriority] = @SalesPriority, [EngActiveFlag] = @EngActiveFlag, [ProjectLead] = @ProjectLead, [TargetDate] = @TargetDate, [ProjectStatus] = @ProjectStatus, [Notes] = @Notes WHERE [ModelYear] = @ModelYear AND [AutoID] = @AutoID">
+                <DeleteParameters>
+                    <asp:Parameter Name="ModelYear" Type="Int32" />
+                    <asp:Parameter Name="AutoID" Type="Int32" />
+                </DeleteParameters>
+                <InsertParameters>
+                    <asp:Parameter Name="ModelYear" Type="Int32" />
+                    <asp:Parameter Name="AutoID" Type="Int32" />
+                    <asp:Parameter Name="RequestedBy" Type="String" />
+                    <asp:Parameter Name="RequestedDate" Type="DateTime" />
+                    <asp:Parameter Name="ApprovalStatus" Type="Int32" />
+                    <asp:Parameter Name="Category" Type="String" />
+                    <asp:Parameter Name="Series" Type="String" />
+                    <asp:Parameter Name="InitialDescription" Type="String" />
+                    <asp:Parameter Name="NarrowedDescription" Type="String" />
+                    <asp:Parameter Name="StrategicPriority" Type="Int32" />
+                    <asp:Parameter Name="SalesPriority" Type="Int32" />
+                    <asp:Parameter Name="EngActiveFlag" Type="Int32" />
+                    <asp:Parameter Name="ProjectLead" Type="String" />
+                    <asp:Parameter DbType="Date" Name="TargetDate" />
+                    <asp:Parameter Name="ProjectStatus" Type="Int32" />
+                    <asp:Parameter Name="Notes" Type="String" />
+                </InsertParameters>
+                <SelectParameters>
+                    <asp:ControlParameter ControlID="lblItemID" Name="AutoID" PropertyName="Text" Type="String" />
+                    <asp:ControlParameter ControlID="lblModelYear" Name="ModelYear" PropertyName="Text" Type="String" />
+                </SelectParameters>
+                <UpdateParameters>
+                    <asp:Parameter Name="RequestedBy" Type="String" />
+                    <asp:Parameter Name="ApprovalStatus" Type="Int32" />
+                    <asp:Parameter Name="Category" Type="String" />
+                    <asp:Parameter Name="Series" Type="String" />
+                    <asp:Parameter Name="InitialDescription" Type="String" />
+                    <asp:Parameter Name="NarrowedDescription" Type="String" />
+                    <asp:Parameter Name="StrategicPriority" Type="Int32" />
+                    <asp:Parameter Name="SalesPriority" Type="Int32" />
+                    <asp:Parameter Name="EngActiveFlag" Type="Int32" />
+                    <asp:Parameter Name="ProjectLead" Type="String" />
+                    <asp:Parameter DbType="Date" Name="TargetDate" />
+                    <asp:Parameter Name="ProjectStatus" Type="Int32" />
+                    <asp:Parameter Name="Notes" Type="String" />
+                    <asp:Parameter Name="ModelYear" Type="Int32" />
+                    <asp:Parameter Name="AutoID" Type="Int32" />
+                </UpdateParameters>
+            </asp:SqlDataSource>
+            <asp:GridView ID="gvNotes" DataSourceID="sdsNotes" runat="server" AutoGenerateColumns="False" CssClass="newStyle1" Width="851px" Caption="Note History" BackColor="White" BorderColor="#999999" BorderStyle="Solid" BorderWidth="1px" CellPadding="3" ForeColor="Black" GridLines="Vertical" DataKeyNames="AutoID">
+                <AlternatingRowStyle BackColor="#CCCCCC" />
+                <Columns>
+                    <asp:CommandField ShowEditButton="True" />
+                    <asp:BoundField DataField="Note" HeaderText="Notes" />
+                    <asp:BoundField DataField="NoteCreated" HeaderText="Entered" ReadOnly="true">
+                        <ItemStyle Width="300px" />
+                    </asp:BoundField>
+                </Columns>
+                <FooterStyle BackColor="#CCCCCC" />
+                <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+                <SelectedRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                <SortedAscendingHeaderStyle BackColor="#808080" />
+                <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                <SortedDescendingHeaderStyle BackColor="#383838" />
+            </asp:GridView>
+
+            <br />
+
+            <br />
+
+            <asp:GridView ID="gvRepComments" runat="server" Caption="Rep Feedback" CssClass="newStyle1" AutoGenerateColumns="False" BackColor="White" BorderColor="#999999" BorderStyle="Solid" BorderWidth="1px" CellPadding="3" DataSourceID="sdsRepComments" ForeColor="Black" GridLines="Vertical" Width="851px">
+                <AlternatingRowStyle BackColor="#CCCCCC" />
+                <Columns>
+                    <asp:BoundField DataField="RepName" HeaderText="Rep" />
+                    <asp:BoundField DataField="RepComment" HeaderText="Comments" />
+                    <asp:BoundField DataField="RepCommentDate" DataFormatString="{0:d}" HeaderText="Date" />
+                </Columns>
+                <FooterStyle BackColor="#CCCCCC" />
+                <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+                <SelectedRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                <SortedAscendingHeaderStyle BackColor="#808080" />
+                <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                <SortedDescendingHeaderStyle BackColor="#383838" />
+            </asp:GridView>
+            <asp:SqlDataSource ID="sdsRepComments" runat="server" ConnectionString="<%$ ConnectionStrings:PDI_ExternalConnectionString %>" ProviderName="<%$ ConnectionStrings:PDI_ExternalConnectionString.ProviderName %>" SelectCommand="SELECT  * FROM RepFeedback WHERE ModelYear = ?ModelYear and ProjectID = ?ProjectID">
+                <SelectParameters>
+                   <asp:ControlParameter ControlID="lblModelYear" Name="ModelYear" PropertyName="Text" Type="String" />
+                    <asp:ControlParameter ControlID="lblItemID" Name="ProjectID" PropertyName="Text" Type="String" />
+                </SelectParameters>
+            </asp:SqlDataSource>
+
+            <br />
+            <asp:DetailsView ID="dvNotes" runat="server" AutoGenerateRows="False" DataKeyNames="AutoID" DataSourceID="sdsNotes" Height="50px" Width="850px" CssClass="newStyle1" Caption="Add Meeting Notes" DefaultMode="Insert" BackColor="White" BorderColor="#999999" BorderStyle="Solid" BorderWidth="1px" CellPadding="3" ForeColor="Black" GridLines="Vertical">
+                <AlternatingRowStyle BackColor="#CCCCCC" />
+                <EditRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                <Fields>
+                    <asp:BoundField DataField="Note" HeaderText="Notes">
+                        <ItemStyle Width="750px" />
+                        <ControlStyle Width="90%"></ControlStyle>
+                    </asp:BoundField>
+                    <asp:CommandField ShowInsertButton="True" />
+                </Fields>
+                <FooterStyle BackColor="#CCCCCC" />
+                <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+            </asp:DetailsView>
+
+            <asp:SqlDataSource ID="sdsNotes" runat="server" ConnectionString="<%$ ConnectionStrings:bml_dataConnectionString %>" DeleteCommand="DELETE FROM [ProductDesignIdeas_Notes] WHERE [AutoID] = @AutoID" InsertCommand="INSERT INTO [ProductDesignIdeas_Notes] ([ModelYear], [ProjectID], [Note], [NoteCreated]) VALUES (@ModelYear, @ProjectID, @Note, GetDate())" SelectCommand="SELECT * FROM [ProductDesignIdeas_Notes] WHERE (([ModelYear] = @ModelYear) AND ([ProjectID] = @ProjectID)) ORDER BY [NoteCreated]" UpdateCommand="UPDATE [ProductDesignIdeas_Notes] SET [Note] = @Note, [NoteCreated] = GetDate() WHERE [AutoID] = @AutoID">
+                <DeleteParameters>
+                    <asp:Parameter Name="AutoID" Type="Int32" />
+                </DeleteParameters>
+                <InsertParameters>
+                    <asp:ControlParameter ControlID="lblModelYear" Name="ModelYear" PropertyName="Text" Type="String" />
+                    <asp:ControlParameter ControlID="lblItemID" Name="ProjectID" PropertyName="Text" Type="String" />
+                    <asp:Parameter Name="Notes" Type="String" />
+                </InsertParameters>
+                <SelectParameters>
+                    <asp:ControlParameter ControlID="lblModelYear" Name="ModelYear" PropertyName="Text" Type="String" />
+                    <asp:ControlParameter ControlID="lblItemID" Name="ProjectID" PropertyName="Text" Type="String" />
+                </SelectParameters>
+                <UpdateParameters>
+                    <asp:Parameter Name="Note" Type="String" />
+                    <asp:Parameter Name="NoteCreated" Type="DateTime" />
+                    <asp:Parameter Name="AutoID" Type="Int32" />
+                </UpdateParameters>
+            </asp:SqlDataSource>
+        </div>
+        <div id="right">
+            <asp:Label ID="lblFileUpload" runat="server" CssClass="newStyle6">File Upload:</asp:Label>
+            <asp:FileUpload ID="File1" runat="server" />&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="btnUpload" runat="server" Text="Upload" />
+            <asp:Label ID="lblUploadResult" runat="server" CssClass="newStyle3"></asp:Label>
+            <br />
+            <br />
+            <asp:Label ID="lblFileUpload0" runat="server" CssClass="newStyle6">Attachments:</asp:Label>
+            <div id="attachments" class="newStyle6">
+                <asp:PlaceHolder ID="PlaceHolder1" runat="server"></asp:PlaceHolder>
+            </div>
+            <br />
+        </div>
+    </form>
+</body>
+</html>

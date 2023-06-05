@@ -1,0 +1,73 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="RepIdeas.aspx.vb" Inherits="PDI_RepIdeas" Debug="true" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Rep Ideas That Haven't Been Accepted for Followup</title>
+     <link href="../StyleSheet.css" rel="stylesheet" />
+      <script>
+          window.onunload = function () {
+              window.opener.document.getElementById('btnRefresh').click();
+
+          }
+
+     </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:Label ID="Label1" runat="server" Text="REP SUBMITTED IDEAS" CssClass="newStyle7"></asp:Label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <asp:Label ID="Label2" runat="server" CssClass="newStyle6" Text="2 Digit Model Year To Add The Project To:"></asp:Label>
+&nbsp;
+        <asp:TextBox ID="tbModelYear" runat="server" Width="56px"></asp:TextBox>
+        <br />
+        <br />
+        <asp:GridView ID="gvRepIdeas" runat="server" DataSourceID="sdsRepIdeas" AutoGenerateColumns="False" CssClass="newStyle1" Width="1226px">
+            <Columns>                
+                <asp:BoundField DataField="RepName" HeaderText="Rep" />
+                <asp:BoundField DataField="Series" HeaderText="Series" />
+                <asp:BoundField DataField="Category" HeaderText="Category" />
+                <asp:BoundField DataField="RepIdea" HeaderText="Rep Idea" />
+                <asp:BoundField DataField="RepIdeaCreated" DataFormatString="{0:d}" HeaderText="Date Submitted" >
+                <ItemStyle HorizontalAlign="Center" />
+                </asp:BoundField>
+                <asp:TemplateField HeaderText="Image #1">
+                    <ItemTemplate>
+                    <asp:Image id="image1" runat="server" style="max-width:300px;" ImageUrl='<%#Eval("Image1URL") %>'></asp:Image>
+                        </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Image #2">
+                    <ItemTemplate>
+                    <asp:Image id="image2" runat="server" style="max-width:300px;" ImageUrl='<%#Eval("Image2URL")%>'></asp:Image>
+                        </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Image #3">
+                    <ItemTemplate>
+                    <asp:Image id="image3" runat="server" style="max-width:300px;" ImageUrl='<%#Eval("Image3URL") %>'></asp:Image>
+                        </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Mark as Duplicate">
+                    <ItemTemplate>
+                        <asp:Button ID="btnDuplicate" runat="server" Text="Duplicate" CommandName="markasduplicate" CommandArgument='<%# Eval("AutoID")%>' />
+                    </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Convert To Project">
+                    <ItemTemplate>
+                        <asp:Button ID="btnAddToProjects" runat="server" Text="Add to Monitored Project List" CommandName="addtoprojects" CommandArgument="<%# Container.DataItemIndex %>" />
+                    </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:BoundField DataField="AutoID" HeaderText="IdeaID" />
+            </Columns>
+        </asp:GridView>
+        <asp:SqlDataSource ID="sdsRepIdeas" runat="server" ConnectionString="<%$ ConnectionStrings:PDI_ExternalConnectionString %>" ProviderName="<%$ ConnectionStrings:PDI_ExternalConnectionString.ProviderName %>" SelectCommand="SELECT * FROM RepIdeas WHERE ProjectCreatedFlag = 0 and DuplicateFlag = 0"></asp:SqlDataSource>
+    </div>
+    </form>
+</body>
+</html>
